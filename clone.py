@@ -2,6 +2,7 @@ import csv
 import cv2
 import numpy as np
 
+#reading driving log that has 3 images, steering wheel angle, etc
 lines = []
 with open("driving_log.csv") as csvfile:
 	reader = csv.reader(csvfile)
@@ -9,7 +10,9 @@ with open("driving_log.csv") as csvfile:
 		lines.append(line)
 		
 
+#last image
 images = []
+#steering wheel angle
 measurements = []
 for line in lines:
 	source_path = line[0]
@@ -24,6 +27,7 @@ for line in lines:
 X_train = np.array(images)
 y_train = np.array(measurements)
 
+#create a simple model for testing
 from keras.models import Sequential
 from keras.layers import Flatten, Dense
 
