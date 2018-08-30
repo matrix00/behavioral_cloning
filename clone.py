@@ -23,9 +23,20 @@ for line in lines:
 	measurement = float(line[3])
 	measurements.append(measurement)
 
+#augment images and with flipped images,
+#augment measurments with negative for flip images
+aug_images = []
+aug_measurements = []
 
-X_train = np.array(images)
-y_train = np.array(measurements)
+for image, measurement in zip(images, measurements):
+        aug_images.append(image)
+        aug_measurements.append(measurement)
+        aug_images.append(cv2.flip(image,1))
+        aug_measurements.append(measurement*-1.0)
+
+X_train = np.array(aug_images)
+y_train = np.array(aug_measurements)
+
 
 #create a simple model for testing
 from keras.models import Sequential
