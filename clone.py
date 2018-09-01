@@ -4,7 +4,7 @@ import numpy as np
 
 #reading driving log that has 3 images, steering wheel angle, etc
 lines = []
-with open("driving_log.csv") as csvfile:
+with open("Run1/driving_log.csv") as csvfile:
 	reader = csv.reader(csvfile)
 	for line in reader:
 		lines.append(line)
@@ -13,15 +13,26 @@ with open("driving_log.csv") as csvfile:
 #last image
 images = []
 #steering wheel angle
+correction  = [0, 0.2, -0.2] # this is a parameter to tune
+
+#steering_left = steering_center + correction
+#steering_right = steering_center - correction
+p=0
+pstart=3018 
 measurements = []
 for line in lines:
-	source_path = line[0]
-	file_name = source_path.split('/')[-1]
-	img_path = 'IMG/'+file_name
-	image = cv2.imread(img_path)
-	images.append(image)
-	measurement = float(line[3])
-	measurements.append(measurement)
+	for i in range(3):
+		source_path = line[i]
+		file_name = source_path.split('/')[-1]
+		img_path = 'Run1/IMG/'+file_name
+		image = cv2.imread(img_path)
+		images.append(image)
+		measurement = float(line[3])  + correction[i]
+		measurements.append(measurement)
+		p = p+1
+		if (p > pstart and p < pstart+20):
+ 			print (' p' , p, ' image name ', img_path, ' steering angle ', measurement)
+
 
 #augment images and with flipped images, 
 #augment measurments with negative for flip images
