@@ -13,7 +13,7 @@ with open("Run1/driving_log.csv") as csvfile:
 #last image
 images = []
 #steering wheel angle
-correction  = [0, 0.2, -0.2] # this is a parameter to tune
+correction  = [0, 0.15, -0.15] # this is a parameter to tune
 
 #steering_left = steering_center + correction
 #steering_right = steering_center - correction
