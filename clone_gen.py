@@ -9,15 +9,17 @@ images_dir = "track1/Run1"
 def batch_generator(img_set, angle_set, batch_size):
 	images = np.empty([batch_size, IMG_HEIGHT, IMG_WIDTH, IMG_CHANNEL])
 	angles = np.empty(batch_size)
+	i = 0
 	while True:
-		i = 0
 		index = random.randint(0,len(img_set)-1)
 		images[i] = img_set[index]
 		angles[i] = angle_set[index]
 		i += 1
+		print ('i ', i , ' size ' , batch_size, ' set ', len(img_set), ' img height ', IMG_HEIGHT)
 		if (i == batch_size):
 			break
         
+	print ('got ', batch_size, ' images ')
 	yield images, angles
 
 
@@ -87,7 +89,7 @@ print('validation set ', len(X_valid))
 ##generate batch for training image
 IMG_HEIGHT, IMG_WIDTH, IMG_CHANNEL = X_train[0].shape
 
-
+print (' h ', IMG_HEIGHT, ' w ', IMG_WIDTH, ' ch ', IMG_CHANNEL)
 
 #create a simple model for testing
 from keras.models import Sequential
@@ -148,6 +150,6 @@ BATCH_SIZE=64
 EPOCH = 4
 SAMPLE_PER_EPOCH=200
 
-model.fit_generator(batch_generator(X_train, y_train, BATCH_SIZE), SAMPLE_PER_EPOCH, EPOCH, max_q_size=1, validation_data=batch_generator(X_valid, y_train, BATCH_SIZE), nb_val_samples=len(X_valid), verbose=1)
+model.fit_generator(batch_generator(X_train, y_train, BATCH_SIZE), SAMPLE_PER_EPOCH, EPOCH, max_q_size=1, validation_data=batch_generator(X_valid, y_valid, BATCH_SIZE), nb_val_samples=len(X_valid), verbose=1)
 
 model.save('model.h5')
