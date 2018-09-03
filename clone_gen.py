@@ -5,6 +5,7 @@ import random
 
 images_dir = "track1/Run1"
 
+
 def batch_generator(img_set, angle_set, batch_size):
 	images = np.empty([batch_size, IMG_HEIGHT, IMG_WIDTH, IMG_CHANNEL])
 	angles = np.empty(batch_size)
