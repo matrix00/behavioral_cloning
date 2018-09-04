@@ -2,6 +2,8 @@ import csv
 import cv2
 import numpy as np
 import random
+from sklearn.utils import shuffle
+
 
 #images_dir = "Run1"
 images_dir = "T2R1"
@@ -80,11 +82,17 @@ for image, measurement in zip(images, measurements):
 	aug_images.append(cv2.flip(image,1))
 	aug_measurements.append(measurement*-1.0)
 
-X_train = np.array(aug_images)
-y_train = np.array(aug_measurements)
 
-X_valid = np.array(val_images)
-y_valid = np.array(val_str_angle)
+from sklearn.model_selection import train_test_split
+
+X_train, X_valid, y_train, y_valid = train_test_split(aug_images, aug_measurements, test_size=0.20)
+
+
+#X_train = np.array(aug_images)
+#y_train = np.array(aug_measurements)
+
+#X_valid = np.array(val_images)
+#y_valid = np.array(val_str_angle)
 
 print('training set ', len(X_train))
 print('validation set ', len(X_valid))
@@ -95,8 +103,8 @@ IMG_HEIGHT, IMG_WIDTH, IMG_CHANNEL = X_train[0].shape
 print (' h ', IMG_HEIGHT, ' w ', IMG_WIDTH, ' ch ', IMG_CHANNEL)
 
 #shuffle data
-sklearn.utils.shuffle(X_train, y_train)
-sklearn.utils.shuffle(X_valid, y_valid)
+X_train, y_train = shuffle(X_train, y_train)
+X_valid, y_valid = shuffle(X_valid, y_valid)
 
 
 #create a simple model for testing
@@ -126,9 +134,6 @@ from keras.layers.pooling import MaxPooling2D
 
 #checkpoint = ModelCheckpoint('model-{epoch:03d}.h5', monitor='val_loss', verbose=0, mode='auto')
 
-
-#from keras import backend as K
-#K.set_image_dim_ordering('th')
 
 model = Sequential()
 model.add(Lambda(lambda x: (x / 255.0) - 0.5, input_shape=(160,320,3)))
