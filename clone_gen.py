@@ -3,24 +3,25 @@ import cv2
 import numpy as np
 import random
 
-images_dir = "track1/Run1"
+#images_dir = "Run1"
+images_dir = "T2R1"
 
 
 def batch_generator(img_set, angle_set, batch_size):
 	images = np.empty([batch_size, IMG_HEIGHT, IMG_WIDTH, IMG_CHANNEL])
 	angles = np.empty(batch_size)
-	i = 0
 	while True:
-		index = random.randint(0,len(img_set)-1)
-		images[i] = img_set[index]
-		angles[i] = angle_set[index]
-		i += 1
-		print ('i ', i , ' size ' , batch_size, ' set ', len(img_set), ' img height ', IMG_HEIGHT)
-		if (i == batch_size):
-			break
+		i = 0
+		for index in np.random.permutation(len(img_set)):
+			images[i] = img_set[index]
+			angles[i] = angle_set[index]
+			i += 1
+#			print ('i ', i , ' size ' , batch_size, ' set ', len(img_set), ' img height ', IMG_HEIGHT)
+			if (i == batch_size):
+				break
         
-	print ('got ', batch_size, ' images ')
-	yield images, angles
+		print ('got ', batch_size, ' images ')
+		yield images, angles
 
 
 
@@ -35,7 +36,8 @@ with open(images_dir+"/driving_log.csv") as csvfile:
 #last image
 images = []
 #steering wheel angle
-correction  = [0, 0.1, -0.1] # this is a parameter to tune
+#correction  = [0, 0.2, -0.2] # this is a parameter to tune
+correction  = [0, 0.15, -0.15] # this is a parameter to tune
 
 #validation set from center images
 val_images = []
@@ -53,7 +55,8 @@ for line in lines:
 		img_path = images_dir+'/IMG/'+file_name
 		image = cv2.imread(img_path)
 		images.append(image)
-		measurement = np.float32(line[3]) *  (1+ correction[i])
+#		measurement = np.float32(line[3]) *  (1+ correction[i])
+		measurement = np.float32(line[3])+ correction[i]
 		measurements.append(measurement)
 
 		#validation set
@@ -90,6 +93,11 @@ print('validation set ', len(X_valid))
 IMG_HEIGHT, IMG_WIDTH, IMG_CHANNEL = X_train[0].shape
 
 print (' h ', IMG_HEIGHT, ' w ', IMG_WIDTH, ' ch ', IMG_CHANNEL)
+
+#shuffle data
+sklearn.utils.shuffle(X_train, y_train)
+sklearn.utils.shuffle(X_valid, y_valid)
+
 
 #create a simple model for testing
 from keras.models import Sequential
@@ -146,10 +154,17 @@ model.add(Dense(1))
 model.compile(loss='mse', optimizer='adam')
 #model.fit(X_train, y_train, validation_split=0.2, shuffle=True, nb_epoch=4)
     
-BATCH_SIZE=64
-EPOCH = 4
-SAMPLE_PER_EPOCH=200
+BATCH_SIZE=32
+EPOCH = 3
+SAMPLE_PER_EPOCH=len(X_train)
+VALID_SAMPLES = len(X_valid)
 
-model.fit_generator(batch_generator(X_train, y_train, BATCH_SIZE), SAMPLE_PER_EPOCH, EPOCH, max_q_size=1, validation_data=batch_generator(X_valid, y_valid, BATCH_SIZE), nb_val_samples=len(X_valid), verbose=1)
+#model.fit_generator(batch_generator(X_train, y_train, BATCH_SIZE), SAMPLE_PER_EPOCH, EPOCH, max_q_size=1, validation_data=batch_generator(X_valid, y_valid, BATCH_SIZE), nb_val_samples=len(X_valid), verbose=1)
 
-model.save('model.h5')
+model.fit_generator(batch_generator(X_train, y_train, BATCH_SIZE), SAMPLE_PER_EPOCH, EPOCH, validation_data=batch_generator(X_valid, y_valid, BATCH_SIZE), nb_val_samples=VALID_SAMPLES)
+
+
+#model.fit_generator(batch_generator(X_train, y_train, BATCH_SIZE), steps_per_epoch=None, epochs=EPOCH, verbose=1, callbacks=None, validation_data=batch_generator(X_valid, y_valid, BATCH_SIZE),  max_queue_size=10, workers=1, use_multiprocessing=False, shuffle=True, initial_epoch=0)
+
+
+model.save('model-t2.h5')
