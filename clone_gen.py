@@ -111,7 +111,6 @@ X_valid, y_valid = shuffle(X_valid, y_valid)
 from keras.models import Sequential
 from keras.layers import Flatten, Dense, Lambda
 from keras.layers import Cropping2D
-#from keras.callbacks import ModelCheckPoint
 
 from keras.layers.core import Activation, Dropout
 from keras.layers.convolutional import Convolution2D
@@ -139,7 +138,7 @@ model = Sequential()
 model.add(Lambda(lambda x: (x / 255.0) - 0.5, input_shape=(160,320,3)))
 #model.add(Cropping2D(cropping=((50,20), (0,0))))
 #model.add(Cropping2D(cropping=((75,25), (0,0))))
-model.add(Cropping2D(cropping=((50,0), (0,0))))
+model.add(Cropping2D(cropping=((50,10), (0,0))))
 model.add(Convolution2D(24,5,5, activation="relu"))
 model.add(MaxPooling2D())
 model.add(Convolution2D(36,5,5, activation="relu"))
@@ -155,14 +154,15 @@ model.add(Dense(50))
 model.add(Dense(10))
 model.add(Dense(1))
 
+model.summary()
 
 model.compile(loss='mse', optimizer='adam')
 #model.fit(X_train, y_train, validation_split=0.2, shuffle=True, nb_epoch=4)
     
 BATCH_SIZE=32
 EPOCH = 2
-SAMPLE_PER_EPOCH=len(X_train)
-VALID_SAMPLES = len(X_valid)
+SAMPLE_PER_EPOCH=5 #len(X_train)
+VALID_SAMPLES = 10 #len(X_valid)
 
 #model.fit_generator(batch_generator(X_train, y_train, BATCH_SIZE), SAMPLE_PER_EPOCH, EPOCH, max_q_size=1, validation_data=batch_generator(X_valid, y_valid, BATCH_SIZE), nb_val_samples=len(X_valid), verbose=1)
 
