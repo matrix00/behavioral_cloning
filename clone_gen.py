@@ -157,19 +157,24 @@ model.add(Dense(1))
 model.summary()
 
 model.compile(loss='mse', optimizer='adam')
-#model.fit(X_train, y_train, validation_split=0.2, shuffle=True, nb_epoch=4)
+model.fit(X_train, y_train, validation_split=0.2, shuffle=True, nb_epoch=4)
     
 BATCH_SIZE=32
 EPOCH = 2
-SAMPLE_PER_EPOCH=5 #len(X_train)
-VALID_SAMPLES = 10 #len(X_valid)
+SAMPLE_PER_EPOCH=len(X_train)
+VALID_SAMPLES = len(X_valid)
+STEPS_PER_EPOCH = len(X_train)
+
+train_generator = batch_generator(X_train, y_train, BATCH_SIZE)
+validation_generator = batch_generator(X_valid, y_valid, BATCH_SIZE)
 
 #model.fit_generator(batch_generator(X_train, y_train, BATCH_SIZE), SAMPLE_PER_EPOCH, EPOCH, max_q_size=1, validation_data=batch_generator(X_valid, y_valid, BATCH_SIZE), nb_val_samples=len(X_valid), verbose=1)
 
-model.fit_generator(batch_generator(X_train, y_train, BATCH_SIZE), SAMPLE_PER_EPOCH, EPOCH, validation_data=batch_generator(X_valid, y_valid, BATCH_SIZE), nb_val_samples=VALID_SAMPLES)
+#model.fit_generator(train_generator, samples_per_epoch = SAMPLE_PER_EPOCH, epochs=EPOCH, validation_data=validation_generator, nb_val_samples=VALID_SAMPLES)
 
 
 #model.fit_generator(batch_generator(X_train, y_train, BATCH_SIZE), steps_per_epoch=None, epochs=EPOCH, verbose=1, callbacks=None, validation_data=batch_generator(X_valid, y_valid, BATCH_SIZE),  max_queue_size=10, workers=1, use_multiprocessing=False, shuffle=True, initial_epoch=0)
 
+#model.fit_generator(train_generator, steps_per_epoch= STEPS_PER_EPOCH, validation_data=validation_generator, validation_steps=VALID_SAMPLES, epochs=EPOCH, verbose = 1)
 
 model.save('model-t2.h5')
