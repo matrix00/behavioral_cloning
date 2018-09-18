@@ -85,7 +85,7 @@ For details about how I created the training data, see the next section.
 
 I mostly follow NVIDIA paper to create the CNN architecture. I modified the parameters to as needed to train with the images collected from the simulator. The following figure shows NVIDIA architecture and corresponding description of layers, activation, and maxpooling paramters.
 
-![alt text](writeup_images/cnn_arch.png)
+![alt text](writeup_images/CNN_arch.png)
 
 NVIDIA paper uses deep learning to train a model and then drive the car autonomously. Therefore, I think it's a good starting point for me to start with that.
 
