@@ -85,7 +85,7 @@ For details about how I created the training data, see the next section.
 
 I mostly follow NVIDIA paper to create the CNN architecture. I modified the parameters to as needed to train with the images collected from the simulator. The following figure shows NVIDIA architecture and corresponding description of layers, activation, and maxpooling paramters.
 
-![alt text](writeup_images/CNN_arch.png)
+![Convolution network architecture](writeup_images/CNN_arch.png)
 
 NVIDIA paper uses deep learning to train a model and then drive the car autonomously. Therefore, I think it's a good starting point for me to start with that.
 
@@ -112,7 +112,7 @@ At the end of the process, the vehicle is able to drive autonomously around the 
 
 The final model architecture consisted of a convolution neural network with the following layers and layer sizes. Here is a  summary of the model
 
-![alt text](writeup_images/model_summary.pdf)
+![model parameter summary](writeup_images/model_summary.pdf)
 
 #### 3. Creation of the Training Set & Training Process
 
@@ -139,14 +139,14 @@ Figure: Another snapshot of images from left, center and right camera during dat
 
 To augment the data sat, I also flipped images and reverse angles thinking that this would help to create more data set and handle the opposite situation. For example, here is an image that has then been flipped:
 
-![alt text](writeup_images/original.jpg)
-![alt text](writeup_images/flipped.jpg)
+![Original image](writeup_images/original.jpg)
+![Flipped image](writeup_images/flipped.jpg)
 
 Figure: Augment image set with flipped the image and reverse the steering wheel.
 
 
-![alt text](writeup_images/original1.jpg)
-![alt text](writeup_images/flipped1.jpg)
+![Original image](writeup_images/original1.jpg)
+![Flipped image](writeup_images/flipped1.jpg)
 
 Figure: Augment image set with flipped the image and reverse the steering wheel
 
