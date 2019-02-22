@@ -2,8 +2,6 @@
 
 ## Ahsan Habib
 
-
-
 ---
 
 **Behavioral Cloning Project**
